@@ -1,0 +1,15 @@
+body{
+    background-color: rgb(162, 216, 75);
+}
+h1{
+    background-color: DarkSeaGreen;
+}
+#point{
+    margin-left: 10px;
+    font-size: 40px;
+}
+#temp{
+    margin-right: 10px;
+    font-size: 40px;
+    float: right;
+}
