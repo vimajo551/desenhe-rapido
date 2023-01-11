@@ -13,3 +13,8 @@ h1{
     font-size: 40px;
     float: right;
 }
+canvas{
+    border: 1px solid black;
+    border-radius: 65px;
+    box-shadow: 2px 1px 3px 4px	#4F4F4F;
+}
