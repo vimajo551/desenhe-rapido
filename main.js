@@ -39,29 +39,96 @@ timerCheck = 0;//adiciona uma string vazia dentro dela. Isso continuará verific
 drawSketch = 0;//adiciona uma string vazia dentro dela. Isso mantém a estimativa aproximada para o esboço que você desenhou na tela.
 answerHolder = 0;//adiciona uma string vazia dentro dela. Esta variável mantém o valor quando o esboço desenhado e o esboço a ser desenhado coincidem.
 score = 0; //inicializa esta variável com 0. Esta variável mantém o valor da pontuação para cada esboço à direita desenhado.
-
-function updateCanvas(){
+//PRIMEIRA FUNÇÃO
+//ATUALIZAR O CANVAS
+function updateCanvas() {
     background("white");
-    randomNumber = Math.floor(Math.random() * quickDrawDataset + 1);
+    randomNumber = Math.floor((Math.random() * quickDrawDataset.length) + 1);
+    console.log(quickDrawDataset[randomNumber]);
     Sketch = quickDrawDataset[randomNumber];
-    document.getElementById("ename").innerHTML = "Seu Esboço é um(a):" + Sketch
-}
-
-function preload(){
-
-}
-
-function setup(){
-    canvas=createCanvas( 255, 255);
+    document.getElementById('SketchName').innerHTML = 'Esboço a ser desenhado: ' + Sketch;
+   }
+   //SEG FUNÇÃO
+   //MESMO DA SALA
+   function preload() {
+    classifier = ml5.imageClassifier('DoodleNet');
+   }
+   // TERC MESMO DA SALA
+   function setup() {
+    canvas = createCanvas(280, 280);
     canvas.center();
     background("white");
-}
-
-function draw(){
-
-}
-
-
-function clearCanvas(){
-    background("white");
-}
+    canvas.mouseReleased(classifyCanvas);
+   }
+   
+   
+   //QUART FUNÇÃO MESMA DA SALA
+   function draw() {
+    //definir peso do traço como 10
+    strokeWeight(13);
+    //definir cor do traço como preta
+    stroke(0);
+    //Se o mouse for pressionado, desenhe uma linha entre as posições anterior e atual do mouse
+    if (mouseIsPressed) {
+      line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+   
+   
+    checkSketch()
+    if(drawnSketch == Sketch)
+    {
+      answerHolder = "set"
+      score++;
+      document.getElementById('score').innerHTML = 'Pontuação: ' + score;
+    }
+   
+   
+   }
+   
+   
+   function classifyCanvas() {
+    classifier.classify(canvas, gotResult);
+   }
+   
+   
+   
+   
+   //É IGUAL O DA ATIVIDADE FAZ IGUAL
+   function gotResult(error, results) {
+    if (error) {
+      console.error(error);
+    }
+    console.log(results);
+    drawnSketch = results[0].label;
+    document.getElementById('label').innerHTML = 'Seu esboço: ' + drawnSketch.replace("_", " ");
+   
+   
+    document.getElementById('confidence').innerHTML = 'Precisão: ' + Math.round(results[0].confidence * 100) + '%';
+   }
+   
+   
+   //AQUI É QUANDO INICIA
+   function checkSketch()
+   {
+    //VAR DO TIME
+    timerCounter++;
+    document.getElementById('temp').innerHTML = 'Tempo: ' + timerCounter;
+    console.log(timerCounter)
+    //TEMPO
+    if(timerCounter > 400)
+      {
+        timerCounter = 0;
+        timerCheck = "completed"
+      }
+      if(timerCheck =="completed" || answerHolder == "set")
+      {
+        timerCheck = "";
+        answerHolder = "";
+        updateCanvas();
+      }
+   
+   
+   }
+   
+   
+   
